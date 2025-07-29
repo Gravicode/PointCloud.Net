@@ -1,4 +1,5 @@
-﻿using SharpDX.Direct3D9;
+﻿using HelixToolkit.Wpf;
+using SharpDX.Direct3D9;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -24,7 +25,7 @@ namespace PointCloud.Wpf
         public MainWindow()
         {
             InitializeComponent();
-            detector = new("C:\\experiment\\pointcloud\\yolov8s.onnx");
+            detector = new("d:\\Models-Obj\\yolov8s.onnx");
             //viewPort3d.CameraMode = HelixToolkit.Wpf.CameraMode.WalkAround;
             //viewPort3d.CameraRotationMode = HelixToolkit.Wpf.CameraRotationMode.Turntable;
             //viewPort3d.ModelUpDirection = new Vector3D(0,0,1);
@@ -50,6 +51,8 @@ namespace PointCloud.Wpf
 
             base.OnKeyDown(e);
         }
+
+        ModelVisual3D LoadedModel { set; get; }
         private void LoadModel_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new Microsoft.Win32.OpenFileDialog();
@@ -57,9 +60,22 @@ namespace PointCloud.Wpf
 
             if (dialog.ShowDialog() == true)
             {
-                var importer = new HelixToolkit.Wpf.ModelImporter();
-                var model = importer.Load(dialog.FileName);
+                //var importer = new HelixToolkit.Wpf.ModelImporter();              
+                //var model = importer.Load(dialog.FileName);
+                // Create the reader
+                var objReader = new ObjReader();
+
+                // Load the model (ensure full path is used)
+                Model3DGroup model = objReader.Read(dialog.FileName);
+                FileInfo info = new FileInfo(dialog.FileName);
+                objReader.TexturePath = System.IO.Path.Combine(info.Directory.FullName, "texture");
                 var visual = new ModelVisual3D { Content = model };
+                
+                if (LoadedModel != null)
+                    viewPort3d.Children.Remove(LoadedModel);
+
+                LoadedModel = visual;
+               
                 viewPort3d.Children.Add(visual);
             }
         }
