@@ -64,11 +64,11 @@ namespace PointCloud.Wpf
                 //var model = importer.Load(dialog.FileName);
                 // Create the reader
                 var objReader = new ObjReader();
-
-                // Load the model (ensure full path is used)
-                Model3DGroup model = objReader.Read(dialog.FileName);
                 FileInfo info = new FileInfo(dialog.FileName);
-                objReader.TexturePath = System.IO.Path.Combine(info.Directory.FullName, "texture");
+                // Load the model (ensure full path is used)
+                //objReader.TexturePath = System.IO.Path.Combine(info.Directory.FullName, "textures");
+                Model3DGroup model = objReader.Read(dialog.FileName);
+               
                 var visual = new ModelVisual3D { Content = model };
                 
                 if (LoadedModel != null)
