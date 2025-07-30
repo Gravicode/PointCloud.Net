@@ -25,7 +25,8 @@ namespace PointCloud.Wpf
         public MainWindow()
         {
             InitializeComponent();
-            detector = new("d:\\Models-Obj\\yolov8s.onnx");
+            var modelPath = @"C:\experiment\pointcloud\yolov8s.onnx";
+            detector = new(modelPath);
             //viewPort3d.CameraMode = HelixToolkit.Wpf.CameraMode.WalkAround;
             //viewPort3d.CameraRotationMode = HelixToolkit.Wpf.CameraRotationMode.Turntable;
             //viewPort3d.ModelUpDirection = new Vector3D(0,0,1);
@@ -117,7 +118,7 @@ namespace PointCloud.Wpf
                     {
                         Debug.WriteLine($"{item.Label} - {item.Confidence}");    
                     }
-                    File.WriteAllBytes("detect.png", Data);
+                    File.WriteAllBytes("detect.png", res.image);
                 }
             }
         }
